@@ -4,16 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Issue {
-    private String title;
-    private String comment;
+public class Issue implements Comparable<Issue> {
+
+    private int id;
+    private boolean isOpen;
     private String author;
-     private boolean status;
-    private HashSet<String> label;
-//    private HashSet<String> assignee;
+    private Set<String> label;
+    private Set<String> milestone;
+    private Set<String> assignee;
+
+    @Override
+    public int compareTo(Issue issue) {
+        return id - issue.id;
+    }
 }

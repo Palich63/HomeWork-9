@@ -17,6 +17,10 @@ public class IssueRepository {
         issues.add(issue);
     }
 
+    public boolean addAll(ArrayList<Issue> issues) {
+        return this.issues.addAll(issues);
+    }
+
     public Collection<Issue> getIssues() {
         return issues;
     }
@@ -26,11 +30,6 @@ public class IssueRepository {
     }
 
     public void removeById(int id) {
-//issues.removeIf(issue -> issue.geId() == id);
+        issues.removeIf(issue -> issue.getId() == id);
     }
-
-//    public Issue getById(int id) {
-//        issues.forEach(issue -> issue.getId() == id);
-//        return (Issue) issues;
-//    }
 }
