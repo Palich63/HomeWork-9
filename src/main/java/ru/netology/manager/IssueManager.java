@@ -1,49 +1,37 @@
 package ru.netology.manager;
 
-import lombok.AllArgsConstructor;
 import ru.netology.domain.Issue;
 import ru.netology.repository.IssueRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 public class IssueManager {
 
-    private IssueRepository repository = new IssueRepository();
+    private IssueRepository repository;
 
-    public IssueManager() {
-
+    public IssueManager(IssueRepository repository) {
+        this.repository = repository;
     }
 
-    public void save(Issue issue) {
-        repository.save(issue);
-    }
-
-    public boolean saveAll(ArrayList<Issue> issues) {
+    public boolean saveAll(List<Issue> issues) {
         return repository.addAll(issues);
     }
 
-    public ArrayList<Issue> allIssue() {
-        return (ArrayList<Issue>) repository.getIssues();
-    }
-
     // Метод Вывода открытых Issue
-    // ??интересно, а можно с помощью лямбда выражения записать этот метод и сделать ещё короче
-    public ArrayList<Issue> openIssue() {
-        ArrayList<Issue> opened = new ArrayList<>();
-        for (Issue issue : repository.getIssues()) {
-            if (issue.isOpen()) {
-                opened.add(issue);
-            }
-        }
-        return opened;
+    public List<Issue> getOpenIssue() {
+        return repository.getIssues().
+                stream().
+                filter(issue -> issue.isOpen())
+                .collect(Collectors.toList());
     }
 
     // Метод Вывода закрытых Issue
-    public ArrayList<Issue> closeIssue() {
+    public List<Issue> getCloseIssue() {
         ArrayList<Issue> closed = new ArrayList<>();
         for (Issue issue : repository.getIssues()) {
             if (issue.isOpen() != true) {
@@ -90,37 +78,33 @@ public class IssueManager {
     }
 
     // Следующие два метода сортируют список по возрастанию и убыванию по id
-    public ArrayList<Issue> sortNewest() {
-        ArrayList<Issue> tmpSort = new ArrayList<>();
-        tmpSort.addAll(repository.getIssues());
-        Collections.sort(tmpSort, Issue::compareTo);
+    public List<Issue> sortNewest() {
+        List<Issue> tmpSort = repository.getIssues();
+        tmpSort.sort(Issue::compareTo);
         return tmpSort;
     }
 
-    public ArrayList<Issue> sortOldest() {
-        ArrayList<Issue> tmpSort = new ArrayList<>();
-        tmpSort.addAll(repository.getIssues());
-        Collections.sort(tmpSort, Issue::compareTo);
+    public List<Issue> sortOldest() {
+        List<Issue> tmpSort = repository.getIssues();
+        tmpSort.sort(Issue::compareTo);
         Collections.reverse(tmpSort);
         return tmpSort;
     }
 
-    //  Следующими двумя методами по id производим закрытие и открытие
-    public void closing(int id) {
-        Predicate<Integer> byId = Predicate.isEqual(id);
-        for (Issue issue : repository.getIssues()) {
-            if (byId.test(issue.getId())) {
-                issue.setOpen(false);
-            }
-        }
-    }
-
-    public void opening(int id) {
-        Predicate<Integer> byId = Predicate.isEqual(id);
-        for (Issue issue : repository.getIssues()) {
-            if (byId.test(issue.getId())) {
-                issue.setOpen(true);
-            }
-        }
-    }
+//    //  Следующими двумя методами по id производим закрытие и открытие
+//    public void closeById(int id) {
+//        for (Issue issue : repository.getIssues()) {
+//            if (issue.getId() == id) {
+//                issue.setOpen(false);
+//            }
+//        }
+//    }
+//
+//    public void openById(int id) {
+//        for (Issue issue : repository.getIssues()) {
+//            if (issue.getId() == id) {
+//                issue.setOpen(true);
+//            }
+//        }
+//    }
 }

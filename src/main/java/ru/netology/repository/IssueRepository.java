@@ -1,35 +1,42 @@
 package ru.netology.repository;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import ru.netology.domain.Issue;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 public class IssueRepository {
 
-    private Collection<Issue> issues = new ArrayList<>();
+    private List<Issue> issues = new ArrayList<>();
 
-    public void save(Issue issue) {
-        issues.add(issue);
-    }
-
-    public boolean addAll(ArrayList<Issue> issues) {
+    public boolean addAll(List<Issue> issues) {
         return this.issues.addAll(issues);
     }
 
-    public Collection<Issue> getIssues() {
+    public List<Issue> getIssues() {
         return issues;
-    }
-
-    public void remove(Issue issue) {
-        issues.remove(issue);
     }
 
     public void removeById(int id) {
         issues.removeIf(issue -> issue.getId() == id);
+    }
+
+    //  Следующими двумя методами по id производим закрытие и открытие
+    public void closeById(int id) {
+        for (Issue issue : getIssues()) {
+            if (issue.getId() == id) {
+                issue.setOpen(false);
+            }
+        }
+    }
+
+    public void openById(int id) {
+        for (Issue issue : getIssues()) {
+            if (issue.getId() == id) {
+                issue.setOpen(true);
+            }
+        }
     }
 }
